@@ -1,0 +1,18 @@
+[package]
+name = "hostauditor"
+version = "1.0.0"
+edition = "2021"
+description = "HostAuditor - Comprehensive localhost security auditor with AI-powered vulnerability analysis"
+
+[dependencies]
+axum = { version = "0.7", features = ["tokio"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1", features = ["full"] }
+tower-http = { version = "0.5", features = ["cors", "fs"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+uuid = { version = "1.7", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+reqwest = { version = "0.11", features = ["json"] }
+anyhow = "1.0"
