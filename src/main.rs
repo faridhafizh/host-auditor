@@ -723,17 +723,28 @@ Format your response as valid JSON only."#,
 fn generate_basic_report(target: &str, findings: &[Finding], scan_type: &str) -> String {
     let now = Utc::now().format("%Y-%m-%d %H:%M UTC");
     
-    let critical: Vec<_> = findings.iter().filter(|f| matches!(f.severity, Severity::Critical)).collect();
-    let high: Vec<_> = findings.iter().filter(|f| matches!(f.severity, Severity::High)).collect();
-    let medium: Vec<_> = findings.iter().filter(|f| matches!(f.severity, Severity::Medium)).collect();
-    let low: Vec<_> = findings.iter().filter(|f| matches!(f.severity, Severity::Low)).collect();
-    let info: Vec<_> = findings.iter().filter(|f| matches!(f.severity, Severity::Info)).collect();
+    // ⚡ Bolt: Optimize severity counting. O(N) single-pass without allocations instead of O(5N) with Vec allocations.
+    let mut critical_len = 0;
+    let mut high_len = 0;
+    let mut medium_len = 0;
+    let mut low_len = 0;
+    let mut info_len = 0;
 
-    let overall_risk = if !critical.is_empty() {
+    for f in findings {
+        match f.severity {
+            Severity::Critical => critical_len += 1,
+            Severity::High => high_len += 1,
+            Severity::Medium => medium_len += 1,
+            Severity::Low => low_len += 1,
+            Severity::Info => info_len += 1,
+        }
+    }
+
+    let overall_risk = if critical_len > 0 {
         "CRITICAL"
-    } else if !high.is_empty() {
+    } else if high_len > 0 {
         "HIGH"
-    } else if !medium.is_empty() {
+    } else if medium_len > 0 {
         "MEDIUM"
     } else {
         "LOW"
@@ -759,8 +770,8 @@ fn generate_basic_report(target: &str, findings: &[Finding], scan_type: &str) ->
          ## Detailed Findings\n\n",
         target, scan_type, now, overall_risk,
         scan_type, target, findings.len(),
-        [!critical.is_empty(), !high.is_empty(), !medium.is_empty(), !low.is_empty()].iter().filter(|&&b| b).count(),
-        critical.len(), high.len(), medium.len(), low.len(), info.len()
+        [critical_len > 0, high_len > 0, medium_len > 0, low_len > 0].iter().filter(|&&b| b).count(),
+        critical_len, high_len, medium_len, low_len, info_len
     );
 
     for (i, finding) in findings.iter().enumerate() {
