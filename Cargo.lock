@@ -358,6 +358,23 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 
 [[package]]
+name = "hostauditor"
+version = "1.0.0"
+dependencies = [
+ "anyhow",
+ "axum",
+ "chrono",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "uuid",
+]
+
+[[package]]
 name = "http"
 version = "0.2.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1494,23 +1511,6 @@ name = "vcpkg"
 version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "accd4ea62f7bb7a82fe23066fb0957d48ef677f6eeb8215f372f52e48bb32426"
-
-[[package]]
-name = "vulnscan"
-version = "1.0.0"
-dependencies = [
- "anyhow",
- "axum",
- "chrono",
- "reqwest",
- "serde",
- "serde_json",
- "tokio",
- "tower-http",
- "tracing",
- "tracing-subscriber",
- "uuid",
-]
 
 [[package]]
 name = "want"
